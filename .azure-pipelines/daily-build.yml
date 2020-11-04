@@ -14,22 +14,6 @@ pool:
 
 steps:
 - task: PowerShell@2
-  displayName: Prepare Powershell $(PSVersion) 
-  inputs:
-    filePath: 'tools/Test/SmokeTest/PrepareRequiredPowershell.ps1'
-    arguments: '-RequiredPsVersion $(PSVersion)'      
-
-- task: PowerShell@2
-  displayName: 'Install platyPS'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $command = "`$PSVersionTable `
-                  Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
-                  Exit"
-      dotnet tool run pwsh -c $command
-
-- task: PowerShell@2
   displayName: 'Set up Environment'
   inputs:
     targetType: 'inline'
@@ -49,16 +33,23 @@ steps:
     arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
 
 - task: PowerShell@2
+  displayName: Prepare Powershell $(PSVersion) 
+  inputs:
+    filePath: 'tools/Test/SmokeTest/PrepareRequiredPowershell.ps1'
+    arguments: '-RequiredPsVersion $(PSVersion)'      
+
+- task: PowerShell@2
   displayName: 'Install platyPS'
   inputs:
     targetType: 'inline'
     script: |
-      $command = "Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
+      $command = "`$PSVersionTable `
+                  Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
                   Exit"
       dotnet tool run pwsh -c $command
       
 - task: PowerShell@2
-  displayName: 'Install platyPS'
+  displayName: 'Bump Version'
   inputs:
     targetType: 'inline'
     script: |
