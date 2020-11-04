@@ -24,7 +24,8 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $command = "Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
+      $command = "`$PSVersionTable `
+                  Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
                   Exit"
       dotnet tool run pwsh -c $command
 
