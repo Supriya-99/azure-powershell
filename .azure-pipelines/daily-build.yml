@@ -51,7 +51,7 @@ steps:
   displayName: 'Bump Version'
   inputs:
     filePath: 'tools/Test/SmokeTest/ScriptsCaller.ps1'
-    arguments: '-RequiredPsVersion $(PSVersion) -Script "./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`"'
+    arguments: '-RequiredPsVersion $(PSVersion) -Script "./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`""'
   
     
 # - task: PowerShell@2
