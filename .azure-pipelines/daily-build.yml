@@ -53,10 +53,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      dotnet tool list
-      $command = "`$PSVersionTable `
+      $command = '`$PSVersionTable `
                 ./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`" `
-                Exit"
+                Exit'
       dotnet tool run pwsh -c $command  
     
 # - task: PowerShell@2
