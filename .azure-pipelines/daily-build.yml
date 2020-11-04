@@ -33,8 +33,6 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      Set-PSRepository -Name PSGallery -InstallationPolicy Trusted 
-      Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
       # Avoid issue of filename too long
       git config --global core.longpaths true
       # Wipe any changes from a previous branch
@@ -53,6 +51,9 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      Set-PSRepository -Name PSGallery -InstallationPolicy Trusted 
+      Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+      Get-ExecutionPolicy
       cd tools
       ./RunVersionController.ps1 -Release "$(MonthName) $(Year)"
     pwsh: true
