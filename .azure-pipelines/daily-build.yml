@@ -13,24 +13,24 @@ pool:
   vmImage: 'windows-2019'
 
 steps:
-# - task: PowerShell@2
-#   displayName: 'Set up Environment'
-#   inputs:
-#     targetType: 'inline'
-#     script: |
-#       Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-#       Get-PSRepository
-#       # Avoid issue of filename too long
-#       git config --global core.longpaths true
-#       # Wipe any changes from a previous branch
-#       git clean -xdf
+- task: PowerShell@2
+  displayName: 'Set up Environment'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+      Get-PSRepository
+      # Avoid issue of filename too long
+      git config --global core.longpaths true
+      # Wipe any changes from a previous branch
+      git clean -xdf
 
-# - task: DotNetCoreCLI@2
-#   displayName: 'Build'
-#   inputs:
-#     command: custom
-#     custom: msbuild
-#     arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: custom
+    custom: msbuild
+    arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
 
 - task: PowerShell@2
   displayName: Prepare Powershell $(PSVersion) 
@@ -54,7 +54,7 @@ steps:
     targetType: 'inline'
     script: |
       $command = '$PSVersionTable
-       ./tools/RunVersionController.ps1 -Release "$(MonthName) $(Year)"
+       ./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`"
        Exit'
       dotnet tool run pwsh -c $command  
 
