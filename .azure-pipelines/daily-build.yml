@@ -53,16 +53,10 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $command = @"$PSVersionTable
-                ./tools/RunVersionController.ps1 -Release ""$(MonthName) $(Year)""
-                Exit"
+      $command = '`$PSVersionTable `
+       ./tools/RunVersionController.ps1 -Release "$(MonthName) $(Year)" `
+       Exit'
       dotnet tool run pwsh -c $command  
-    
-# - task: PowerShell@2
-#   displayName: 'Bump Version'
-#   inputs:
-#     filePath: 'tools\RunVersionController.ps1'
-#     arguments: '-Release "$(MonthName) $(Year)"'
 
 - task: EsrpCodeSigning@1
   inputs:
