@@ -14,6 +14,16 @@ pool:
 
 steps:
 - task: PowerShell@2
+  displayName: 'Bump Version'
+  inputs:
+    targetType: 'inline'
+    script: |
+      Set-PSRepository -Name PSGallery -InstallationPolicy Trusted 
+      Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+      Get-ExecutionPolicy -List
+    pwsh: true
+
+- task: PowerShell@2
   displayName: 'Install platyPS'
   inputs:
     targetType: inline
@@ -53,7 +63,7 @@ steps:
     script: |
       Set-PSRepository -Name PSGallery -InstallationPolicy Trusted 
       Set-ExecutionPolicy Unrestricted -Scope CurrentUser -Force
-      Get-ExecutionPolicy
+      Get-ExecutionPolicy -List
       cd tools
       ./RunVersionController.ps1 -Release "$(MonthName) $(Year)"
     pwsh: true
