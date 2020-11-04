@@ -14,16 +14,19 @@ pool:
 
 steps:
 - task: PowerShell@2
-  displayName: 'Install platyPS'
+  displayName: Prepare Powershell $(PSVersion) 
   inputs:
-    targetType: inline
-    script: 'Install-Module platyPS -Force -Confirm:$false -Scope CurrentUser'
+    filePath: 'tools/Test/SmokeTest/PrepareRequiredPowershell.ps1'
+    arguments: '-RequiredPsVersion $(PSVersion)'      
 
 - task: PowerShell@2
-  displayName: 'Install PowerShellGet [v2.1.3 has a Publish-Module bug]'
+  displayName: 'Install platyPS'
   inputs:
-    targetType: inline
-    script: 'Install-Module PowerShellGet -Force -Confirm:$false -Scope CurrentUser -SkipPublisherCheck'
+    targetType: 'inline'
+    script: |
+      $command = "Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
+                  Exit"
+      dotnet tool run pwsh -c $command
 
 - task: PowerShell@2
   displayName: 'Set up Environment'
@@ -44,15 +47,12 @@ steps:
     custom: msbuild
     arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
 
-# - task: PowerShell@2
-#   displayName: 'Bump Version'
-#   inputs:
-#     targetType: 'inline'
-#     script: |
-
-#       cd tools
-#       ./RunVersionController.ps1 -Release "$(MonthName) $(Year)"
-#     pwsh: true
+- task: PowerShell@2
+  displayName: 'Bump Version'
+  inputs:
+    filePath: 'tools/Test/SmokeTest/ScriptsCaller.ps1'
+    arguments: '-RequiredPsVersion $(PSVersion) -Script "./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`"'
+  
     
 # - task: PowerShell@2
 #   displayName: 'Bump Version'
