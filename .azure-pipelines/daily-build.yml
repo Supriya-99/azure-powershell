@@ -48,11 +48,14 @@ steps:
     arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
 
 - task: PowerShell@2
-  displayName: 'Bump Version'
+  displayName: 'Install platyPS'
   inputs:
-    filePath: 'tools/Test/SmokeTest/ScriptsCaller.ps1'
-    arguments: '-RequiredPsVersion $(PSVersion) -Script "./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`""'
-  
+    targetType: 'inline'
+    script: |
+      $command = "`$PSVersionTable `
+                ./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`" `
+                Exit"
+      dotnet tool run pwsh -c $command  
     
 # - task: PowerShell@2
 #   displayName: 'Bump Version'
