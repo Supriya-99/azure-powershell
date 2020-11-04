@@ -52,6 +52,15 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
+      $command = "Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
+                  Exit"
+      dotnet tool run pwsh -c $command
+      
+- task: PowerShell@2
+  displayName: 'Install platyPS'
+  inputs:
+    targetType: 'inline'
+    script: |
       $command = "`$PSVersionTable `
                 ./tools/RunVersionController.ps1 -Release `"$(MonthName) $(Year)`" `
                 Exit"
