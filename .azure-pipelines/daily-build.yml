@@ -14,23 +14,15 @@ pool:
 
 steps:
 - task: PowerShell@2
-  displayName: 'Set up Environment'
+  displayName: 'Initialization'
   inputs:
     targetType: 'inline'
     script: |
       Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-      Get-PSRepository
       # Avoid issue of filename too long
       git config --global core.longpaths true
       # Wipe any changes from a previous branch
       git clean -xdf
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: custom
-    custom: msbuild
-    arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
 
 - task: PowerShell@2
   displayName: Prepare Powershell $(PSVersion) 
@@ -47,7 +39,14 @@ steps:
                   Install-Module platyPS -Force -Confirm:`$false -Scope CurrentUser `
                   Exit"
       dotnet tool run pwsh -c $command
-      
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build for Bumping Version'
+  inputs:
+    command: custom
+    custom: msbuild
+    arguments: 'build.proj /t:"Build" /p:"Configuration=Release"'
+
 - task: PowerShell@2
   displayName: 'Bump Version'
   inputs:
@@ -57,6 +56,13 @@ steps:
        ./tools/RunVersionController.ps1  -MonthName $(MonthName) -Year $(Year) `
        Exit"
       dotnet tool run pwsh -c $command  
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build for Test'
+  inputs:
+    command: custom
+    custom: msbuild
+    arguments: 'build.proj /t:Build;GenerateHelp;StaticAnalysis /p:Configuration=Release'
 
 - task: EsrpCodeSigning@1
   inputs:

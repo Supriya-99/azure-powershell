@@ -194,12 +194,14 @@ switch ($PSCmdlet.ParameterSetName)
     "ReleaseAz"
     {
 
-        if($Release -eq ''){
+        if($null -eq $Release)
+        {
+            if(($null -eq $MonthName) -or ($null -eq $Year))
+            {
+                throw "Must given parameter Release or MonthName&Year"
+            }
             $Release = "$MonthName $Year"
-        }
-        if($Release -eq ''){
-           throw "Must given parameter Release or MonthName&Year"
-        }
+        }  
         
         # clean the unnecessary SerializedCmdlets json file
         $ExistSerializedCmdletJsonFile = Get-ExistSerializedCmdletJsonFile
