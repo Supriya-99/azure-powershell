@@ -54,9 +54,8 @@ steps:
     targetType: 'inline'
     script: |
       $command = "`$PSVersionTable `
-       ./tools/RunVersionController.ps1 -Release """"$(MonthName) $(Year)"""" `
+       ./tools/RunVersionController.ps1  -MonthName $(MonthName) -Year $(Year) `
        Exit"
-      Write-Host $command
       dotnet tool run pwsh -c $command  
 
 - task: EsrpCodeSigning@1
