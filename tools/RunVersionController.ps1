@@ -194,9 +194,9 @@ switch ($PSCmdlet.ParameterSetName)
     "ReleaseAz"
     {
 
-        if($null -eq $Release)
+        if('' -eq $Release)
         {
-            if(($null -eq $MonthName) -or ($null -eq $Year))
+            if(('' -eq $MonthName) -or ('' -eq $Year))
             {
                 throw "Must given parameter Release or MonthName&Year"
             }
