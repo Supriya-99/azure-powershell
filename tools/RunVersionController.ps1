@@ -5,8 +5,14 @@
 
 [CmdletBinding(DefaultParameterSetName="ReleaseAz")]
 Param(
-    [Parameter(ParameterSetName='ReleaseAz', Mandatory = $true)]
+    [Parameter(ParameterSetName='ReleaseAz', Mandatory = $false)]
     [string]$Release,
+
+    [Parameter(ParameterSetName='ReleaseAz', Mandatory = $false)]
+    [string]$MonthName,
+
+    [Parameter(ParameterSetName='ReleaseAz', Mandatory = $false)]
+    [string]$Year,
 
     [Parameter(ParameterSetName='ReleaseSingleModule', Mandatory = $true)]
     [string]$ModuleName,
@@ -188,6 +194,13 @@ switch ($PSCmdlet.ParameterSetName)
     "ReleaseAz"
     {
 
+        if($Release -eq ''){
+            $Release = "$MonthName $Year"
+        }
+        if($Release -eq ''){
+           throw "Must given parameter Release or MonthName&Year"
+        }
+        
         # clean the unnecessary SerializedCmdlets json file
         $ExistSerializedCmdletJsonFile = Get-ExistSerializedCmdletJsonFile
         $ExpectJsonHashSet = @{}
